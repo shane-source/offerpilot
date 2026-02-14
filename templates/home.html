@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero p-4 p-lg-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <div class="chip mb-3"><i class="bi bi-stars"></i> Board • Notes • CV uploads • Charts</div>
+      <h1 class="fw-bold display-5 mb-3">A job tracker that feels like a real SaaS product.</h1>
+      <p class="small-muted mb-4">
+        Manage your job search with a Kanban board, attach documents, write notes, and see progress analytics.
+      </p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-dark btn-pill btn-lg" href="/register/"><i class="bi bi-rocket-takeoff"></i> Start free</a>
+        <a class="btn btn-outline-dark btn-pill btn-lg" href="/login/"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card-soft p-4">
+        <div class="fw-bold mb-2"><i class="bi bi-columns-gap"></i> Kanban preview</div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="stage-wrap">
+              <div class="stage-head"><div class="stage-title">Applied</div><span class="badge badge-soft">2</span></div>
+              <div class="stage-body d-grid gap-2">
+                <div class="kanban-card"><div class="fw-bold">Safaricom</div><div class="card-meta">Junior Analyst</div></div>
+                <div class="kanban-card"><div class="fw-bold">Andela</div><div class="card-meta">Data Intern</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="stage-wrap">
+              <div class="stage-head"><div class="stage-title">Interview</div><span class="badge badge-soft">1</span></div>
+              <div class="stage-body d-grid gap-2">
+                <div class="kanban-card"><div class="fw-bold">Twiga</div><div class="card-meta">Tue 10:00</div></div>
+                <div class="small-muted">Drag cards →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="small-muted mt-3">Clean design, fast workflow.</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

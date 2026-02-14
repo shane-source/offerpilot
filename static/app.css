@@ -1,0 +1,50 @@
+:root{
+  --bg:#f6f7fb;
+  --card:#fff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:rgba(15,23,42,.10);
+  --shadow:0 14px 32px rgba(15,23,42,.08);
+  --radius:18px;
+
+  --brand1:#6366f1;
+  --brand2:#10b981;
+}
+
+body{background:var(--bg)!important;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto}
+.navbar{background:rgba(255,255,255,.9)!important;backdrop-filter:blur(10px)}
+.brand-badge{
+  width:38px;height:38px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--brand1),#1d4ed8);color:#fff;box-shadow:0 12px 26px rgba(99,102,241,.35);
+}
+.card-soft{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.btn-pill{border-radius:999px}
+.badge-soft{background:rgba(15,23,42,.06);color:var(--text);border:1px solid rgba(15,23,42,.08)}
+.subtle-input{border-radius:14px;border:1px solid rgba(15,23,42,.12);background:rgba(255,255,255,.95)}
+.hero{
+  border-radius:26px;
+  background:
+    radial-gradient(900px 500px at 20% 0%, rgba(99,102,241,.22), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(16,185,129,.18), transparent 55%),
+    linear-gradient(180deg,#ffffff,#fbfbff);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.chip{
+  display:inline-flex;gap:.5rem;align-items:center;padding:.45rem .75rem;border-radius:999px;
+  border:1px solid rgba(15,23,42,.12);background:rgba(255,255,255,.8);color:var(--muted);font-size:.9rem;
+}
+.kpi{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--border);box-shadow:0 10px 22px rgba(15,23,42,.05)}
+.kpi .label{color:var(--muted);font-size:.9rem}
+.kpi .value{font-size:1.8rem;font-weight:800}
+.stage-wrap{border-radius:20px;border:1px solid var(--border);background:rgba(255,255,255,.88);box-shadow:0 10px 22px rgba(15,23,42,.05);overflow:hidden}
+.stage-head{display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid var(--border);
+  background:linear-gradient(90deg,rgba(99,102,241,.10),rgba(16,185,129,.08));}
+.stage-title{font-weight:900}
+.stage-body{padding:12px;min-height:140px}
+.kanban-card{border-radius:16px;padding:12px;background:#fff;border:1px solid rgba(15,23,42,.10);box-shadow:0 10px 20px rgba(15,23,42,.04)}
+.kanban-card:hover{transform:translateY(-1px);transition:120ms ease;border-color:rgba(15,23,42,.16)}
+.logo{width:38px;height:38px;border-radius:14px;object-fit:cover;border:1px solid rgba(15,23,42,.10);background:#fff}
+.card-meta{color:var(--muted);font-size:.85rem}
+.small-muted{color:var(--muted);font-size:.92rem}
+

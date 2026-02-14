@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="fw-bold m-0">Analytics</h2>
+    <div class="small-muted">Progress tracking with charts.</div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="kpi"><div class="label">Total</div><div class="value">{{ summary.total }}</div></div></div>
+  <div class="col-md-3"><div class="kpi"><div class="label">Interviews</div><div class="value">{{ summary.interviews }}</div></div></div>
+  <div class="col-md-3"><div class="kpi"><div class="label">Offers</div><div class="value">{{ summary.offers }}</div></div></div>
+  <div class="col-md-3"><div class="kpi"><div class="label">Success</div><div class="value">{{ summary.success }}%</div></div></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card-soft p-3">
+      <div class="fw-bold mb-2"><i class="bi bi-bar-chart-line"></i> Applications per week</div>
+      <canvas id="barChart" height="120"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-soft p-3">
+      <div class="fw-bold mb-2"><i class="bi bi-pie-chart"></i> Outcomes</div>
+      <canvas id="donutChart" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  const weekly = {{ weekly|safe }};
+  const labels = weekly.map(x => x.week);
+  const counts = weekly.map(x => x.count);
+
+  new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: { labels, datasets: [{ label: "Applications", data: counts }] },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  new Chart(document.getElementById("donutChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Offers", "Rejected", "Interviews"],
+      datasets: [{
+        data: [{{ summary.offers }}, {{ summary.rejected }}, {{ summary.interviews }}]
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { position: "bottom" } }, cutout: "68%" }
+  });
+</script>
+{% endblock %}

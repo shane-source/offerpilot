@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load dict_extras %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-end gap-2 mb-3">
+  <div>
+    <h2 class="fw-bold m-0">Board</h2>
+    <div class="small-muted">Drag cards between stages. Notes + CV per card.</div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <form class="d-flex gap-2" method="GET">
+      <input class="form-control subtle-input" name="q" placeholder="Search..." value="{{ q }}" style="min-width:260px;">
+      <button class="btn btn-outline-dark btn-pill"><i class="bi bi-search"></i></button>
+    </form>
+    <button class="btn btn-dark btn-pill" data-bs-toggle="modal" data-bs-target="#createModal">
+      <i class="bi bi-plus-lg"></i> New
+    </button>
+  </div>
+</div>
+
+<div class="row g-3">
+  {% for stage in stages %}
+  <div class="col-md-3">
+    <div class="stage-wrap">
+      <div class="stage-head">
+        <div class="stage-title">{{ stage.name }}</div>
+        <span class="badge badge-soft">{{ cards_by_stage|get_item:stage.id|length }}</span>
+      </div>
+
+      <div class="stage-body d-grid gap-2 stage-column" data-stage-id="{{ stage.id }}">
+        {% for card in cards_by_stage|get_item:stage.id %}
+          <div class="kanban-card card-item" data-app-id="{{ card.id }}">
+            <div class="d-flex gap-2 align-items-center">
+              {% if card.company_logo %}
+                <img class="logo" src="{{ card.company_logo.url }}" alt="logo">
+              {% else %}
+                <div class="logo d-flex align-items-center justify-content-center"><i class="bi bi-building"></i></div>
+              {% endif %}
+              <div class="flex-grow-1">
+                <div class="fw-bold">{{ card.company }}</div>
+                <div class="card-meta">{{ card.job_title }}</div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-2 flex-wrap">
+              {% if card.location %}<span class="badge badge-soft"><i class="bi bi-geo"></i> {{ card.location }}</span>{% endif %}
+              {% if card.job_url %}<a class="badge badge-soft" href="{{ card.job_url }}" target="_blank"><i class="bi bi-link-45deg"></i> link</a>{% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="d-flex gap-2">
+                <a class="btn btn-sm btn-outline-dark btn-pill" href="/app/{{ card.id }}/notes/"><i class="bi bi-journal-text"></i></a>
+                <a class="btn btn-sm btn-outline-dark btn-pill" href="/app/{{ card.id }}/attachments/"><i class="bi bi-paperclip"></i></a>
+              </div>
+              <span class="badge badge-soft">{{ card.status }}</span>
+            </div>
+          </div>
+        {% empty %}
+          <div class="small-muted">Drop here</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Create modal -->
+<div class="modal fade" id="createModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content card-soft">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Create application</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST" action="/board/create/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <label class="form-label">Company</label>
+          <input class="form-control subtle-input mb-2" name="company" required>
+
+          <label class="form-label">Logo (optional)</label>
+          <input class="form-control subtle-input mb-2" type="file" name="company_logo" accept="image/*">
+
+          <label class="form-label">Job title</label>
+          <input class="form-control subtle-input mb-2" name="job_title" required>
+
+          <label class="form-label">Location</label>
+          <input class="form-control subtle-input mb-2" name="location">
+
+          <label class="form-label">Stage</label>
+          <select class="form-select subtle-input mb-2" name="stage" required>
+            {% for s in stages %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}
+          </select>
+
+          <label class="form-label">Job URL</label>
+          <input class="form-control subtle-input mb-2" name="job_url">
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary btn-pill" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-dark btn-pill" type="submit">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  document.querySelectorAll(".stage-column").forEach(col => {
+    new Sortable(col, {
+      group: "kanban",
+      animation: 200,
+      onEnd: (evt) => {
+        const appId = evt.item.getAttribute("data-app-id");
+        const stageId = evt.to.getAttribute("data-stage-id");
+        const pos = evt.newIndex;
+
+        const fd = new FormData();
+        fd.append("app_id", appId);
+        fd.append("stage_id", stageId);
+        fd.append("position", pos);
+
+        fetch("/board/move/", {
+          method: "POST",
+          headers: {"X-CSRFToken": getCookie("csrftoken")},
+          body: fd
+        }).then(() => window.location.reload());
+      }
+    });
+  });
+</script>
+
+{% endblock %}
